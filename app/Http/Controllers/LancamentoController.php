@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Lancamento;
+
+class LancamentoController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $lancamentos = Lancamento::all();
+        return view('lancamentos.index', compact('lancamentos'));
+    }
+
+    public function __construct()
+    {
+    $this->middleware(function ($request, $next) {
+        if (!session()->has('usuario')) {
+            return redirect('/');
+        }
+        return $next($request);
+    });
+    }   
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Lancamento $lancamento)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Lancamento $lancamento)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Lancamento $lancamento)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Lancamento $lancamento)
+    {
+        //
+    }
+}
