@@ -15,3 +15,7 @@ Route::get('/logout', [AuthController::class, 'logout']);
 
 // listagem protegida
 Route::get('/lancamentos', [LancamentoController::class, 'index']);
+Route::resource('lancamentos', LancamentoController::class);
+
+// Export para PDF
+Route::get('/lancamentos/pdf', [LancamentoController::class, 'exportPdf']);
