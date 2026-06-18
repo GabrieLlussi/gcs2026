@@ -16,8 +16,7 @@ pipeline {
 
                 docker rm -f postgres_test || true
 
-                docker run -d \
-                  --name postgres_test \
+                docker run -d --name postgres_test \
                   --network ci_network \
                   -e POSTGRES_DB=gcs_test \
                   -e POSTGRES_USER=postgres \
@@ -29,7 +28,9 @@ pipeline {
                 docker run --rm \
                   --network ci_network \
                   --env-file .env.testing \
-                  app_ci sh -c "
+                  app_ci \
+                  sh -c "
+                    php artisan key:generate &&
                     php artisan migrate &&
                     php artisan test
                   "
@@ -46,8 +47,8 @@ pipeline {
                 cd docker
 
                 docker rm -f postgres_homolog || true
+                docker rm -f app_homolog || true
 
-                docker compose -f docker-compose.homolog.yml down
                 docker compose -f docker-compose.homolog.yml up -d --build
                 '''
             }

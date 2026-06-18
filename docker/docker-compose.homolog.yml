@@ -1,26 +1,25 @@
-version: '3.8'
+name: homolog
 
 services:
   app:
-    build: ..
-    container_name: laravel_homolog
+    build: .
+    container_name: app_homolog
     ports:
       - "8081:8000"
-    env_file:
-      - ../.env.homolog
     depends_on:
       - db
+    env_file:
+      - .env.homolog
 
   db:
     image: postgres:15
     container_name: postgres_homolog
-    restart: always
     environment:
-      POSTGRES_DB: homolog
+      POSTGRES_DB: gcs
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - postgres_data_homolog:/var/lib/postgresql/data
+      - postgres_homolog_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data_homolog:
+  postgres_homolog_data:
