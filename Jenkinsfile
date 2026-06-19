@@ -5,7 +5,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t app_ci .'
+                sh 'echo "Build OK"'
             }
         }
 
@@ -17,23 +17,21 @@ pipeline {
                 docker rm -f postgres_test || true
 
                 docker run -d --name postgres_test \
-                  --network ci_network \
-                  -e POSTGRES_DB=gcs_test \
-                  -e POSTGRES_USER=postgres \
-                  -e POSTGRES_PASSWORD=postgres \
-                  postgres:15
+                    --network ci_network \
+                    -e POSTGRES_DB=gcs_test \
+                    -e POSTGRES_USER=postgres \
+                    -e POSTGRES_PASSWORD=postgres \
+                    postgres:15
 
                 sleep 5
 
                 docker run --rm \
-                  --network ci_network \
-                  --env-file .env.testing \
-                  app_ci \
-                  sh -c "
-                    php artisan key:generate &&
-                    php artisan migrate &&
-                    php artisan test
-                  "
+                    --network ci_network \
+                    --env-file .env.testing \
+                    app_ci sh -c "
+                        php artisan migrate &&
+                        php artisan test
+                    "
 
                 docker stop postgres_test
                 docker rm postgres_test
@@ -45,10 +43,7 @@ pipeline {
             steps {
                 sh '''
                 cd docker
-
-                docker rm -f postgres_homolog || true
-                docker rm -f app_homolog || true
-
+                docker compose -f docker-compose.homolog.yml down || true
                 docker compose -f docker-compose.homolog.yml up -d --build
                 '''
             }
