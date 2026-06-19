@@ -15,7 +15,7 @@ echo "🔌 Ativando Docker..."
 sudo systemctl enable docker
 sudo systemctl start docker
 
-echo "🔧 Instalando Docker Compose..."
+echo "🔧 Instalando Docker Compose (plugin)..."
 DOCKER_CONFIG=${DOCKER_CONFIG:-/usr/libexec/docker}
 sudo mkdir -p $DOCKER_CONFIG/cli-plugins
 
@@ -30,10 +30,10 @@ git clone https://github.com/GabrieLlussi/gcs2026.git
 
 cd gcs2026/docker
 
-echo "🐳 Subindo HOMOLOG..."
+echo "🐳 Subindo HOMOLOG (8081)..."
 sudo docker compose -f docker-compose.homolog.yml up -d --build
 
-echo "🐳 Subindo PROD..."
+echo "🐳 Subindo PROD (8082)..."
 sudo docker compose -f docker-compose.prod.yml up -d --build
 
 cd ..
@@ -50,11 +50,18 @@ sudo docker run -d \
   -e JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
   jenkins/jenkins:lts
 
-echo "⏳ Aguardando Jenkins..."
-sleep 30
+echo "⏳ Aguardando Jenkins subir..."
+
+until curl -s http://localhost:8080/login > /dev/null; do
+  sleep 5
+done
 
 echo "🔌 Instalando plugins..."
 sudo docker exec jenkins jenkins-plugin-cli --plugins git workflow-aggregator
+
+echo "📦 Instalando git dentro do Jenkins..."
+sudo docker exec jenkins apt update
+sudo docker exec jenkins apt install -y git
 
 echo "👤 Criando usuário + job automático..."
 
@@ -66,6 +73,7 @@ import jenkins.model.*
 import hudson.security.*
 import org.jenkinsci.plugins.workflow.job.*
 import org.jenkinsci.plugins.workflow.cps.*
+import hudson.plugins.git.*
 
 def instance = Jenkins.getInstance()
 
@@ -82,12 +90,21 @@ instance.setAuthorizationStrategy(strategy)
 def jobName = "pipeline-gcs"
 
 if (instance.getItem(jobName) == null) {
+
+    def scm = new GitSCM(
+        [new UserRemoteConfig("https://github.com/GabrieLlussi/gcs2026.git", null, null, null)],
+        null,
+        [new BranchSpec("*/main")],
+        false,
+        [],
+        null,
+        null,
+        []
+    )
+
     def job = instance.createProject(WorkflowJob, jobName)
 
-    job.setDefinition(new CpsScmFlowDefinition(
-        new hudson.plugins.git.GitSCM("https://github.com/GabrieLlussi/gcs2026.git"),
-        "Jenkinsfile"
-    ))
+    job.setDefinition(new CpsScmFlowDefinition(scm, "Jenkinsfile"))
 
     job.save()
 }
