@@ -1,10 +1,9 @@
 *.log
 .DS_Store
 .env
-!.env.homolog
-!.env.prod
-docker/.env.homolog
-docker/.env.prod
+!.env.*
+!docker/.env.homolog
+!docker/.env.prod
 .env.backup
 .env.production
 .phpactor.json
