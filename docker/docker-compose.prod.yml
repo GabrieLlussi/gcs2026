@@ -2,7 +2,9 @@ name: prod
 
 services:
   app:
-    build: .
+    build:
+      context: ..
+      dockerfile: Dockerfile
     container_name: app_prod
     ports:
       - "8082:8000"

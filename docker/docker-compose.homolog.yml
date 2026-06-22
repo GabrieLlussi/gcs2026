@@ -2,7 +2,9 @@ name: homolog
 
 services:
   app:
-    build: .
+    build:
+      context: ..
+      dockerfile: Dockerfile
     container_name: app_homolog
     ports:
       - "8081:8000"
