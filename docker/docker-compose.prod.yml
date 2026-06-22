@@ -13,7 +13,7 @@ services:
     env_file:
       - .env.prod
     command: sh -c "
-      cp .env.prod .env &&
+      cp /app/docker/.env.prod /app/.env &&
       php artisan key:generate &&
       php artisan migrate &&
       php -S 0.0.0.0:8000 -t public "

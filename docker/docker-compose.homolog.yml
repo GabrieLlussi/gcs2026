@@ -13,7 +13,7 @@ services:
     env_file:
       - .env.homolog
     command: sh -c "
-      cp .env.homolog .env &&
+      cp /app/docker/.env.homolog /app/.env &&
       php artisan key:generate &&
       php artisan migrate &&
       php -S 0.0.0.0:8000 -t public "
