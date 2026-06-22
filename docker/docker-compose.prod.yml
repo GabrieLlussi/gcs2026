@@ -14,15 +14,15 @@ services:
       - .env.prod
     command: sh -c "
       cp /app/docker/.env.prod /app/.env &&
-      php artisan config:clear &&
-      php artisan cache:clear &&
-      php artisan config:cache &&
+      echo 'Esperando banco subir...' &&
+      until nc -z postgres_homolog 5432; do
+        sleep 2;
+      done &&
+      echo 'Banco OK!' &&
       php artisan key:generate --force &&
-      php artisan config:clear &&
-      sleep 10 &&
       php artisan migrate --force &&
       php -S 0.0.0.0:8000 -t public "
-      
+
   db:
     image: postgres:15
     container_name: postgres_prod
