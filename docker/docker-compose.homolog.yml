@@ -12,6 +12,11 @@ services:
       - db
     env_file:
       - .env.homolog
+    command: sh -c "
+      php artisan key:generate &&
+      php artisan migrate &&
+      php -S 0.0.0.0:8000 -t public "
+    
 
   db:
     image: postgres:15
