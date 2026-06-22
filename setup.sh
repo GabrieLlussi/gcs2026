@@ -65,7 +65,8 @@ sudo docker exec jenkins apt install -y git
 
 echo "👤 Criando usuário + job automático..."
 
-sudo docker exec jenkins bash -c '
+sudo docker exec -u root jenkins bash -c '
+
 mkdir -p /var/jenkins_home/init.groovy.d
 
 cat <<EOT > /var/jenkins_home/init.groovy.d/setup.groovy
@@ -73,7 +74,6 @@ import jenkins.model.*
 import hudson.security.*
 import org.jenkinsci.plugins.workflow.job.*
 import org.jenkinsci.plugins.workflow.cps.*
-import hudson.plugins.git.*
 
 def instance = Jenkins.getInstance()
 
@@ -90,21 +90,12 @@ instance.setAuthorizationStrategy(strategy)
 def jobName = "pipeline-gcs"
 
 if (instance.getItem(jobName) == null) {
-
-    def scm = new GitSCM(
-        [new UserRemoteConfig("https://github.com/GabrieLlussi/gcs2026.git", null, null, null)],
-        null,
-        [new BranchSpec("*/main")],
-        false,
-        [],
-        null,
-        null,
-        []
-    )
-
     def job = instance.createProject(WorkflowJob, jobName)
 
-    job.setDefinition(new CpsScmFlowDefinition(scm, "Jenkinsfile"))
+    job.setDefinition(new CpsScmFlowDefinition(
+        new hudson.plugins.git.GitSCM("https://github.com/GabrieLlussi/gcs2026.git"),
+        "Jenkinsfile"
+    ))
 
     job.save()
 }
