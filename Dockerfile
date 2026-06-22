@@ -13,20 +13,17 @@ RUN apt-get update && apt-get install -y \
 # Instala Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copia apenas arquivos necessários primeiro (cache)
-COPY composer.json composer.lock ./
-
-# Instala dependências (sem dev pra ficar mais leve)
-RUN composer install --no-dev --optimize-autoloader
-
-# Agora copia o restante do projeto
+# 🔥 COPIA TUDO PRIMEIRO (ESSENCIAL PRO LARAVEL)
 COPY . .
 
-# Permissões (evita erro em storage)
+# Instala dependências
+RUN composer install --no-dev --optimize-autoloader
+
+# Permissões
 RUN chmod -R 777 storage bootstrap/cache
 
-# Porta padrão Laravel
+# Porta
 EXPOSE 8000
 
-# Start da aplicação
+# Start
 CMD php artisan serve --host=0.0.0.0 --port=8000
