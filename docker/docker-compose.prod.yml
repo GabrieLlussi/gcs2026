@@ -14,7 +14,8 @@ services:
       - .env.prod
     command: sh -c "
       cp /app/docker/.env.prod /app/.env &&
-      php artisan key:generate &&
+      php artisan config:clear &&
+      php artisan key:generate --force &&
       sleep 10 &&
       php artisan migrate --force &&
       php -S 0.0.0.0:8000 -t public "
