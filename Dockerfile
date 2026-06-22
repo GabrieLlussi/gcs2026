@@ -18,6 +18,7 @@ COPY . .
 
 # Instala dependências
 RUN composer install --no-dev --optimize-autoloader
+RUN apt-get install -y netcat-openbsd
 
 # Permissões
 RUN chmod -R 777 storage bootstrap/cache
