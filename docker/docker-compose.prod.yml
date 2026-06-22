@@ -15,9 +15,10 @@ services:
     command: sh -c "
       cp /app/docker/.env.prod /app/.env &&
       echo 'Esperando banco subir...' &&
-      until nc -z postgres_prod 5432; do
-        sleep 2;
+      until pg_isready -h postgres_prod -p 5432 -U postgres; do
+      sleep 2;
       done &&
+      
       echo 'Banco OK!' &&
       php artisan key:generate --force &&
       php artisan migrate --force &&
