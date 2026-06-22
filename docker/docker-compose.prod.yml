@@ -15,13 +15,13 @@ services:
     command: sh -c "
       cp /app/docker/.env.prod /app/.env &&
       echo 'Esperando banco subir...' &&
-      until nc -z postgres_homolog 5432; do
+      until nc -z postgres_prod 5432; do
         sleep 2;
       done &&
       echo 'Banco OK!' &&
       php artisan key:generate --force &&
       php artisan migrate --force &&
-      php -S 0.0.0.0:8000 -t public "
+      php artisan serve --host=0.0.0.0 --port=8000 "
 
   db:
     image: postgres:15
