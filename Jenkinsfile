@@ -3,6 +3,12 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/GabrieLlussi/gcs2026.git'
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'echo "Build OK"'
@@ -12,16 +18,10 @@ pipeline {
         stage('Testes') {
             steps {
                 sh '''
-                echo "🔨 Build da imagem de testes..."
-                docker build -t app_ci .
-
-                echo "🌐 Criando rede..."
                 docker network create ci_network || true
 
-                echo "🗑 Limpando container antigo..."
                 docker rm -f postgres_test || true
 
-                echo "🐘 Subindo Postgres de teste..."
                 docker run -d --name postgres_test \
                     --network ci_network \
                     -e POSTGRES_DB=gcs_test \
@@ -29,10 +29,10 @@ pipeline {
                     -e POSTGRES_PASSWORD=postgres \
                     postgres:15
 
-                echo "⏳ Aguardando banco..."
                 sleep 5
 
-                echo "🧪 Rodando testes..."
+                docker build -t app_ci .
+
                 docker run --rm \
                     --network ci_network \
                     --env-file .env.testing \
@@ -41,7 +41,6 @@ pipeline {
                         php artisan test
                     "
 
-                echo "🧹 Limpando ambiente de teste..."
                 docker stop postgres_test
                 docker rm postgres_test
                 '''
@@ -51,11 +50,10 @@ pipeline {
         stage('Deploy Homolog') {
             steps {
                 sh '''
-                echo "🚀 Atualizando homolog..."
-
                 cd docker
 
                 docker compose -f docker-compose.homolog.yml down || true
+
                 docker compose -f docker-compose.homolog.yml up -d --build
                 '''
             }
