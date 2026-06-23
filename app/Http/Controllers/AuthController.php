@@ -31,4 +31,9 @@ class AuthController extends Controller
         session()->forget('usuario');
         return redirect('/');
     }
+
+    public function erroPipeline()
+    {
+    $teste = 123;
+    }
 }
