@@ -21,7 +21,7 @@
 @endif
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>💰 Controle Financeiro</h2>
+        <h2>💰 Controle das finanças</h2>
         <a href="/logout" class="btn btn-danger">
             <i class="bi bi-box-arrow-right"></i> Sair
         </a>
