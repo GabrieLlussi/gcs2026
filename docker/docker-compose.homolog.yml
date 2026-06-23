@@ -15,13 +15,11 @@ services:
     command: sh -c "
       cp /app/docker/.env.homolog /app/.env &&
       echo 'Esperando banco subir...' &&
-      until pg_isready -h postgres_homolog -p 5432 -U postgres; do
-      sleep 2;
-      done &&
-      
-      echo 'Banco OK!' &&
+      sleep 10 &&
       php artisan key:generate --force &&
-      php artisan migrate --force &&
+      until php artisan migrate --force; do
+        sleep 3
+      done &&
       php artisan db:seed --force &&
       php artisan serve --host=0.0.0.0 --port=8000 "
     
