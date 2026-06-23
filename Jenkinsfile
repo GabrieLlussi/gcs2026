@@ -15,6 +15,18 @@ pipeline {
             }
         }
 
+        stage('Qualidade de Código (PHPMD)') {
+            steps {
+                sh '''
+                docker build -t app_ci .
+
+                docker run --rm app_ci sh -c "
+                vendor/bin/phpmd app text unusedcode
+                "
+                '''
+            }
+        }
+
         stage('Testes') {
             steps {
                 sh '''
@@ -43,18 +55,6 @@ pipeline {
 
                 docker stop postgres_test
                 docker rm postgres_test
-                '''
-            }
-        }
-
-        stage('Qualidade de Código (PHPMD)') {
-            steps {
-                sh '''
-                docker build -t app_ci .
-
-                docker run --rm app_ci sh -c "
-                vendor/bin/phpmd app text unusedcode
-                "
                 '''
             }
         }
