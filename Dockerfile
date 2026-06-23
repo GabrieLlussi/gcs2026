@@ -24,7 +24,7 @@ ARG APP_ENV=production
 RUN if [ "$APP_ENV" = "testing" ]; then \
       composer install; \
     else \
-      composer install --no-dev --optimize-autoloader; \
+      composer install; \
     fi  
 
 # Permissões
