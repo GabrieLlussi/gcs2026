@@ -47,6 +47,18 @@ pipeline {
             }
         }
 
+        stage('Qualidade de Código (PHPMD)') {
+            steps {
+                sh '''
+                docker build -t app_ci .
+
+                docker run --rm app_ci sh -c "
+                vendor/bin/phpmd app text unusedcode
+                "
+                '''
+            }
+        }
+
         stage('Deploy Homolog') {
             steps {
                 sh '''
