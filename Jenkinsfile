@@ -5,7 +5,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/GabrieLlussi/gcs2026.git'
+                git branch: 'main', url: 'https://github.com/GabrieLlussi/gcs2026.git'
             }
         }
 
@@ -51,9 +51,7 @@ pipeline {
             steps {
                 sh '''
                 cd docker
-
                 docker compose -f docker-compose.homolog.yml down || true
-
                 docker compose -f docker-compose.homolog.yml up -d --build
                 '''
             }
