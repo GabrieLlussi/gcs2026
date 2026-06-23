@@ -31,7 +31,7 @@ pipeline {
 
                 sleep 5
 
-                docker build -t app_ci .
+                docker build -t app_ci --build-arg APP_ENV=testing .
 
                 docker run --rm \
                     --network ci_network \

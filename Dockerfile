@@ -19,6 +19,13 @@ COPY . .
 # Instala dependências
 RUN composer install --no-dev --optimize-autoloader
 RUN apt-get install -y netcat-openbsd
+ARG APP_ENV=production
+
+RUN if [ "$APP_ENV" = "testing" ]; then \
+      composer install; \
+    else \
+      composer install --no-dev --optimize-autoloader; \
+    fi  
 
 # Permissões
 RUN chmod -R 777 storage bootstrap/cache
