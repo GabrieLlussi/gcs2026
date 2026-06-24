@@ -23,7 +23,7 @@ O fluxo é todo orquestrado pelo Jenkins, que executa os testes automatizados e 
 
 A infraestrutura é composta por uma única **máquina virtual Ubuntu Server**, rodando **Docker Engine** com três containers isolados:
 
-![Arquitetura CI/CD](./diagrama_cicd.svg)
+![Arquitetura CI/CD](./arquitetura.png)
 
 | Container | Função |
 |---|---|
