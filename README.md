@@ -1,58 +1,90 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 Pipeline CI/CD — Laravel + PostgreSQL
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Pipeline de Integração e Entrega Contínua para uma aplicação **PHP/Laravel**, com banco de dados **PostgreSQL**, orquestrado via **Jenkins** e executado em **containers Docker** sobre uma **VM Ubuntu Server**.
 
-## About Laravel
+![Status](https://img.shields.io/badge/status-em%20produção-success)
+![PHP](https://img.shields.io/badge/PHP-8.x-777BB3?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-Framework-FF2D20?logo=laravel&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containers-2496ED?logo=docker&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D33833?logo=jenkins&logoColor=white)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Sobre o projeto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Este repositório documenta a arquitetura e o pipeline de CI/CD configurados para automatizar o ciclo de **build → teste → análise de qualidade → deploy** de uma aplicação Laravel, desde o commit no GitHub até a disponibilização em produção.
 
-## Learning Laravel
+O fluxo é todo orquestrado pelo Jenkins, que executa os testes automatizados e promove a aplicação entre os ambientes de homologação e produção.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🏗️ Arquitetura
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+A infraestrutura é composta por uma única **máquina virtual Ubuntu Server**, rodando **Docker Engine** com três containers isolados:
 
-## Agentic Development
+![Arquitetura CI/CD](./diagrama_cicd.svg)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+| Container | Função |
+|---|---|
+| **Jenkins** | Orquestra o pipeline de CI/CD (build, testes, análise, deploy) |
+| **Homologação** | Ambiente de QA — PHP 8 + Laravel + PostgreSQL |
+| **Produção** | Ambiente final — PHP 8 + Laravel + PostgreSQL |
 
-```bash
-composer require laravel/boost --dev
+> 💡 Coloque o arquivo `diagrama_cicd.svg` na raiz do repositório (ou ajuste o caminho acima) para o diagrama aparecer renderizado no GitHub.
 
-php artisan boost:install
+---
+
+## 🛠️ Tecnologias utilizadas
+
+| Categoria | Tecnologia |
+|---|---|
+| **Ambiente** | Máquina Virtual + Docker + Ubuntu Server |
+| **Linguagem** | PHP 8 (Laravel) |
+| **Banco de dados** | PostgreSQL |
+| **Controle de versão** | Git |
+| **Controle de mudança** | GitHub (Pull Requests / Issues) |
+| **Integração contínua** | Jenkins |
+| **Testes automatizados** | PHPUnit |
+| **Análise de qualidade de código** | PHPMD |
+| **Containerização** | Docker |
+
+
+## 📦 Estrutura dos containers
+
+```
+VM (Ubuntu Server)
+└── Docker Engine
+    ├── jenkins/         → Orquestração do pipeline CI/CD
+    ├── homologacao/      → PHP 8 + Laravel + PostgreSQL
+    └── producao/         → PHP 8 + Laravel + PostgreSQL
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ✅ Testes e qualidade de código
 
-## Code of Conduct
+```bash
+# Executar testes unitários
+./vendor/bin/phpunit
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Executar análise estática de código
+./vendor/bin/phpmd app/ text cleancode,codesize,controversial,design,naming,unusedcode
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📁 Estrutura de pastas (sugestão)
 
-## License
+```
+.
+├── app/                 # Código-fonte Laravel
+├── tests/               # Testes PHPUnit
+├── Jenkinsfile          # Definição do pipeline
+├── docker-compose.yml   # Orquestração dos containers
+├── diagrama_cicd.svg    # Diagrama da arquitetura
+└── README.md
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
