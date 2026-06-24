@@ -8,35 +8,34 @@
 
 <style>
 body {
-    background: radial-gradient(circle at top, #1e293b, #020617);
+    background-color: #f5f7fa;
     min-height: 100vh;
-    color: white;
     font-family: 'Segoe UI', sans-serif;
+    color: #1e293b;
 }
 
-/* GLASS REAL */
-.glass {
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
+/* CARD CLEAN */
+.card-clean {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 24px;
 }
 
 /* INPUT */
-.input-glass {
-    background: rgba(255,255,255,0.08);
-    border: none;
-    color: white;
+.input-clean {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #1e293b;
 }
-.input-glass:focus {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    box-shadow: 0 0 0 2px #22c55e;
+.input-clean:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
 }
 
 /* BOTÕES */
 .btn-modern {
-    border-radius: 12px;
+    border-radius: 10px;
     transition: 0.2s;
 }
 .btn-modern:hover {
@@ -44,18 +43,20 @@ body {
 }
 
 /* TABELA */
-.table-glass {
-    background: transparent;
-    color: white;
+.table-clean {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
 }
-.table-glass thead {
-    background: rgba(255,255,255,0.08);
+.table-clean thead {
+    background: #f1f5f9;
 }
-.table-glass tbody tr {
-    transition: 0.2s;
+.table-clean th {
+    color: #475569;
+    font-weight: 600;
 }
-.table-glass tbody tr:hover {
-    background: rgba(255,255,255,0.08);
+.table-clean tbody tr:hover {
+    background: #f9fafb;
 }
 
 /* BADGES */
@@ -82,25 +83,25 @@ body {
 
 <!-- HEADER -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">💰 Controle Financeiro</h3>
+    <h3 class="fw-bold text-primary">💰 Controle Financeiro</h3>
     <a href="/logout" class="btn btn-danger btn-modern">Sair</a>
 </div>
 
-<div class="glass p-4 shadow-lg">
+<div class="card-clean">
 
 <!-- FILTRO -->
 <form method="GET" class="row g-3 mb-4">
 
     <div class="col-md-3">
-        <input type="date" name="data_inicio" class="form-control input-glass">
+        <input type="date" name="data_inicio" class="form-control input-clean">
     </div>
 
     <div class="col-md-3">
-        <input type="date" name="data_fim" class="form-control input-glass">
+        <input type="date" name="data_fim" class="form-control input-clean">
     </div>
 
     <div class="col-md-3">
-        <select name="situacao" class="form-control input-glass">
+        <select name="situacao" class="form-control input-clean">
             <option value="">Todos</option>
             <option value="1">Ativo</option>
             <option value="0">Inativo</option>
@@ -123,7 +124,7 @@ body {
 <!-- TABELA -->
 <div class="table-responsive">
 
-<table class="table table-glass align-middle">
+<table class="table table-clean align-middle">
 
 <thead>
 <tr>
@@ -148,7 +149,7 @@ body {
 
 <td>{{ date('d/m/Y', strtotime($l->data_lancamento)) }}</td>
 
-<td class="fw-bold">R$ {{ number_format($l->valor, 2, ',', '.') }}</td>
+<td class="fw-bold text-success">R$ {{ number_format($l->valor, 2, ',', '.') }}</td>
 
 <td>
 @if($l->tipo_lancamento == 'receita')
@@ -182,7 +183,7 @@ onclick="return confirm('Excluir?')">🗑️</button>
 </tr>
 @empty
 <tr>
-<td colspan="7" class="text-center text-light">Nenhum lançamento</td>
+<td colspan="7" class="text-center text-muted">Nenhum lançamento</td>
 </tr>
 @endforelse
 
