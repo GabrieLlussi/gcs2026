@@ -31,8 +31,6 @@ A infraestrutura é composta por uma única **máquina virtual Ubuntu Server**, 
 | **Homologação** | Ambiente de QA — PHP 8 + Laravel + PostgreSQL |
 | **Produção** | Ambiente final — PHP 8 + Laravel + PostgreSQL |
 
-> 💡 Coloque o arquivo `diagrama_cicd.svg` na raiz do repositório (ou ajuste o caminho acima) para o diagrama aparecer renderizado no GitHub.
-
 ---
 
 ## 🛠️ Tecnologias utilizadas
@@ -75,7 +73,7 @@ VM (Ubuntu Server)
 
 ---
 
-## 📁 Estrutura de pastas (sugestão)
+## 📁 Estrutura de pastas
 
 ```
 .
