@@ -32,8 +32,8 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function erroPipeline()
-    {
-    $teste = 123;
-    }
+    //public function erroPipeline()
+    //{
+    //$teste = 123;
+    //}
 }
