@@ -2,7 +2,7 @@
 
 Pipeline de Integração e Entrega Contínua para uma aplicação **PHP/Laravel**, com banco de dados **PostgreSQL**, orquestrado via **Jenkins** e executado em **containers Docker** sobre uma **VM Ubuntu Server**.
 
-![Status](https://img.shields.io/badge/status-em%20produção-success)
+![Status](https://img.shields.io/badge/status-concluído-success)
 ![PHP](https://img.shields.io/badge/PHP-8.x-777BB3?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-Framework-FF2D20?logo=laravel&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql&logoColor=white)
@@ -13,9 +13,11 @@ Pipeline de Integração e Entrega Contínua para uma aplicação **PHP/Laravel*
 
 ## 📋 Sobre o projeto
 
-Este repositório documenta a arquitetura e o pipeline de CI/CD configurados para automatizar o ciclo de **build → teste → análise de qualidade → deploy** de uma aplicação Laravel, desde o commit no GitHub até a disponibilização em produção.
+Este projeto tem como objetivo demonstrar a implementação de um pipeline completo para automatizar o ciclo de **build → teste → análise de qualidade → deploy** para uma aplicação web desenvolvida em PHP utilizando o framework Laravel e banco de dados PostgreSQL.
 
-O fluxo é todo orquestrado pelo Jenkins, que executa os testes automatizados e promove a aplicação entre os ambientes de homologação e produção.
+A solução foi construída com foco na automação do processo de desenvolvimento, testes, validação e implantação de software, aplicando conceitos estudados na disciplina de Gerência de Configuração de Software. Para isso, foi utilizada uma infraestrutura baseada em containers Docker executados em uma máquina virtual Linux, permitindo a separação dos ambientes de homologação e produção.
+
+O fluxo inicia com o desenvolvimento e versionamento do código-fonte através do Git e GitHub. Sempre que uma alteração é enviada ao repositório, o Jenkins pode executar automaticamente etapas de validação, incluindo análise de qualidade de código com PHPMD e execução de testes automatizados. Caso todas as verificações sejam aprovadas, o sistema é atualizado no ambiente de homologação, permitindo a validação das alterações antes de sua disponibilização em produção. A aplicação consiste em um sistema de controle financeiro, responsável pelo gerenciamento de receitas e despesas.
 
 ---
 
@@ -37,15 +39,14 @@ A infraestrutura é composta por uma única **máquina virtual Ubuntu Server**, 
 
 | Categoria | Tecnologia |
 |---|---|
-| **Ambiente** | Máquina Virtual + Docker + Ubuntu Server |
+| **Ambiente** | Máquina Virtual (Ubuntu) + Containers Docker |
 | **Linguagem** | PHP 8 (Laravel) |
 | **Banco de dados** | PostgreSQL |
 | **Controle de versão** | Git |
-| **Controle de mudança** | GitHub (Pull Requests / Issues) |
+| **Controle de mudança** |  Git + GitHub |
 | **Integração contínua** | Jenkins |
 | **Testes automatizados** | PHPUnit |
 | **Análise de qualidade de código** | PHPMD |
-| **Containerização** | Docker |
 
 
 ## 📦 Estrutura dos containers
@@ -53,36 +54,24 @@ A infraestrutura é composta por uma única **máquina virtual Ubuntu Server**, 
 ```
 VM (Ubuntu Server)
 └── Docker Engine
-    ├── jenkins/         → Orquestração do pipeline CI/CD
-    ├── homologacao/      → PHP 8 + Laravel + PostgreSQL
-    └── producao/         → PHP 8 + Laravel + PostgreSQL
+    ├── jenkins/      → Orquestração do pipeline CI/CD
+    ├── homolog/      → PHP 8 + Laravel + PostgreSQL
+    └── prod/         → PHP 8 + Laravel + PostgreSQL
 ```
 
 ---
 
+## 🔎 Controle de Qualidade
 
-## ✅ Testes e qualidade de código
+Antes do deploy em homologação, o Jenkins executa:
 
-```bash
-# Executar testes unitários
-./vendor/bin/phpunit
+- PHPMD (PHP Mess Detector)
+- PHPUnit
 
-# Executar análise estática de código
-./vendor/bin/phpmd app/ text cleancode,codesize,controversial,design,naming,unusedcode
-```
+Caso qualquer etapa falhe:
 
----
-
-## 📁 Estrutura de pastas
-
-```
-.
-├── app/                 # Código-fonte Laravel
-├── tests/               # Testes PHPUnit
-├── Jenkinsfile          # Definição do pipeline
-├── docker-compose.yml   # Orquestração dos containers
-├── diagrama_cicd.svg    # Diagrama da arquitetura
-└── README.md
-```
+- Build interrompido
+- Deploy cancelado
+- Ambiente de homologação permanece inalterado
 
 ---
