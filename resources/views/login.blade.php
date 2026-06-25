@@ -138,7 +138,7 @@
 
 <div class="login-card">
     <div class="eyebrow">Controle Financeiro</div>
-    <h2>🔐 Acesso ao Sistema</h2>
+    <h2>Acesso ao Sistema</h2>
 
     @if(session('erro'))
         <div class="error">
